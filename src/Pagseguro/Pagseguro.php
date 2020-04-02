@@ -7,18 +7,41 @@ class Pagseguro {
     private $SANDBOX_ENVIRONMENT;
     private $PAGSEGURO_API_URL, $PAGSEGURO_EMAIL, $PAGSEGURO_TOKEN, $library;
 
-    function __construct($email, $token, bool $sandbox = true) {
-        $this->SANDBOX_ENVIRONMENT = $sandbox;
-        $this->PAGSEGURO_API_URL = 'https://ws.pagseguro.uol.com.br/v2';
-
-        if ($this->SANDBOX_ENVIRONMENT) {
-            $this->PAGSEGURO_API_URL = 'https://ws.sandbox.pagseguro.uol.com.br/v2';
-            $this->PAGSEGURO_EMAIL = $email;
-            $this->PAGSEGURO_TOKEN = $token;
-        } else {
-            $this->PAGSEGURO_EMAIL = $email;
-            $this->PAGSEGURO_TOKEN = $token;
+    function __construct() {
+        // importar arquivo de configuração desta aplicação.
+        $t = explode(DIRECTORY_SEPARATOR, __DIR__);
+        $file = 'composer.json';
+        while (!file_exists($file)) {
+            array_pop($t);
+            $dir = implode(DIRECTORY_SEPARATOR, $t) . DIRECTORY_SEPARATOR;
+            $file = $dir . 'composer.json';
         }
+        $config = $dir . 'nsCheckoutConfig.php';
+        if (!file_exists($config)) {
+            copy(__DIR__.'/nsCheckoutConfig.php', $config);
+            echo "<h1>É necessário criar o arquivo de configuração no mesmo diretorio onde esta o composer.json. Tentei gravar um modelo. Caso não esteja la, copie de \Pagseguro\nsCheckoutConfig.php</h1>";
+            die();
+        }
+        // incluir arquivo de configuracao
+        include_once $config;
+        $this->SANDBOX_ENVIRONMENT = $nsCheckoutConfig['useSandbox'];
+
+        if ($this->SANDBOX_ENVIRONMENT !== false) {
+            $this->PAGSEGURO_API_URL = 'https://ws.sandbox.pagseguro.uol.com.br/v2';
+            $this->PAGSEGURO_EMAIL = $nsCheckoutConfig['sandbox']['email'];
+            $this->PAGSEGURO_TOKEN = $nsCheckoutConfig['sandbox']['token'];
+        } else {
+            $this->PAGSEGURO_API_URL = 'https://ws.pagseguro.uol.com.br/v2';
+            $this->PAGSEGURO_EMAIL = $nsCheckoutConfig['producao']['email'];
+            $this->PAGSEGURO_TOKEN = $nsCheckoutConfig['producao']['token'];
+        }
+    }
+
+    public function getLinkToJavascriptForDirectPayemnt() {
+        if ($this->SANDBOX_ENVIRONMENT !== false) {
+            $sandbox = 'sandbox.';
+        }
+        return '<script type="text/javascript" src="https://stc.' . $sandbox . 'pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.directpayment.js"></script>';
     }
 
     public function trataError($error) {
@@ -88,10 +111,10 @@ class Pagseguro {
 
     public function getSessionCode() {
         $response = $this->call($this->PAGSEGURO_API_URL . "/sessions");
-        return (($response->error)?$response->error:$response->id);        
+        return (($response->error) ? $response->error : $response->id);
     }
 
-    // O array padrão está no arquivo \Pagseguro\CheckoutDataExample.php. Copie e use o padrão. Não altere este arquivo.
+    // O array padrão está no arquivo \Pagseguro\samples\CheckoutDataExample.php. Copie e use o padrão. Não altere este arquivo.
     public function checkout(array $CheckoutData) {
         $data = $CheckoutData;
         require __DIR__ . '/CheckoutDataExample.php';
