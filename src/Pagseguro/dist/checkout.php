@@ -29,10 +29,10 @@ and open the template in the editor.
 
         <script type="text/javascript" src="assets/bootstrap-4.3.1/js/bootstrap.js"></script>
         <script type="text/javascript" src="assets/fontawesome-5.11/js/all.js"></script>
-        <script type="text/javascript" src="assets/jQuery-Mask-Plugin-master/dist/jquery.mask.min.js"></script>
+        <script type="text/javascript" src="assets/jquery.mask.min.js"></script>
 
 
-        <script type="text/javascript" src="assets/Swal/swal-alert.js"></script>
+        <script type="text/javascript" src="assets/swal-alert.js"></script>
 
 
         <script type="text/javascript" src="js/angular.min.js"></script>
