@@ -1,0 +1,19 @@
+{
+    "name": "nextstage-brasil/ns-checkou-library",
+    "description": "Checkout simplificado para os diversos gateway do mercado",
+    "require": {
+        "php": "^7.2"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "nsCheckout\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Nextstage",
+            "email": "ns@nextstage.com.br"
+        }
+    ]
+}
