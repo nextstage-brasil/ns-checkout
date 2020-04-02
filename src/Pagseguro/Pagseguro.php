@@ -29,10 +29,16 @@ class Pagseguro {
         return '<script type="text/javascript" src="https://stc.' . $sandbox . 'pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.directpayment.js"></script>';
     }
 
+    public function isSandBox() {
+        return $this->SANDBOX_ENVIRONMENT;
+    }
+
     public function trataError($error) {
         $out = [];
         foreach ($error as $err) {
-            $out[] = $err->message;
+            if ((int) $err === 0) {
+                $out[] = $err; //json_decode($err)->message;
+            }
         }
         return $out;
     }
@@ -103,7 +109,7 @@ class Pagseguro {
     public function checkout(array $CheckoutData) {
         $data = $CheckoutData;
         require __DIR__ . '/CheckoutDataExample.php';
-        $dados = array_merge($data, $data); // para garantir que todos os campos necessários virão aqui
+        $dados = array_merge($CheckoutData, $data); // para garantir que todos os campos necessários virão aqui
         $dados['receiverEmail'] = $this->PAGSEGURO_EMAIL;
         $response = $this->call($this->PAGSEGURO_API_URL . "/transactions", $dados);
         return $response;
