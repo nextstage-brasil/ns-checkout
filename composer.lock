@@ -1,0 +1,59 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "280b64b95f438ce19906da89a42c5d70",
+    "packages": [
+        {
+            "name": "nextstage-brasil/ns-util",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nextstage-brasil/ns-util.git",
+                "reference": "57b99f9a58dfd9687e8814bbe79cb927cdebf5b7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nextstage-brasil/ns-util/zipball/57b99f9a58dfd9687e8814bbe79cb927cdebf5b7",
+                "reference": "57b99f9a58dfd9687e8814bbe79cb927cdebf5b7",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "NsUtil\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Nextstage",
+                    "email": "ns@nextstage.com.br"
+                }
+            ],
+            "description": "Metodos e classes de utilidades diversas",
+            "time": "2020-04-02T19:24:15+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": "^7.2",
+        "ext-curl": "*",
+        "lib-curl": "*",
+        "lib-openssl": "*"
+    },
+    "platform-dev": []
+}

@@ -1,0 +1,23 @@
+{
+    "name": "nextstage-brasil/ns-checkout",
+    "description": "Checkout simplificado",
+    "require": {
+        "php": "^7.2",
+        "ext-curl": "*",
+        "lib-curl": "*",
+        "lib-openssl": "*",
+        "nextstage-brasil/ns-util": "^1.0"
+    },
+    "license": "Apache-2.0",
+    "autoload": {
+        "psr-4": {
+            "nsCheckout\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Nextstage",
+            "email": "ns@nextstage.com.br"
+        }
+    ]
+}
