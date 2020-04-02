@@ -28,6 +28,7 @@ class Pagseguro {
         }
         return '<script type="text/javascript" src="https://stc.' . $sandbox . 'pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.directpayment.js"></script>';
     }
+    
 
     public function isSandBox() {
         return $this->SANDBOX_ENVIRONMENT;
