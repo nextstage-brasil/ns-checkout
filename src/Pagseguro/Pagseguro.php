@@ -8,32 +8,17 @@ class Pagseguro {
     private $PAGSEGURO_API_URL, $PAGSEGURO_EMAIL, $PAGSEGURO_TOKEN, $library;
 
     function __construct() {
-        // importar arquivo de configuração desta aplicação.
-        $t = explode(DIRECTORY_SEPARATOR, __DIR__);
-        $file = 'composer.json';
-        while (!file_exists($file)) {
-            array_pop($t);
-            $dir = implode(DIRECTORY_SEPARATOR, $t) . DIRECTORY_SEPARATOR;
-            $file = $dir . 'composer.json';
-        }
-        $config = $dir . 'nsCheckoutConfig.php';
-        if (!file_exists($config)) {
-            copy(__DIR__.'/nsCheckoutConfig.php', $config);
-            echo "<h1>É necessário criar o arquivo de configuração no mesmo diretorio onde esta o composer.json. Tentei gravar um modelo. Caso não esteja la, copie de \Pagseguro\nsCheckoutConfig.php</h1>";
-            die();
-        }
-        // incluir arquivo de configuracao
-        include_once $config;
-        $this->SANDBOX_ENVIRONMENT = $nsCheckoutConfig['useSandbox'];
+        $config = \NsUtil\Helper::nsIncludeConfigFile(__DIR__ . '/nsCheckoutConfig.php');
+        $this->SANDBOX_ENVIRONMENT = $config['useSandbox'];
 
         if ($this->SANDBOX_ENVIRONMENT !== false) {
             $this->PAGSEGURO_API_URL = 'https://ws.sandbox.pagseguro.uol.com.br/v2';
-            $this->PAGSEGURO_EMAIL = $nsCheckoutConfig['sandbox']['email'];
-            $this->PAGSEGURO_TOKEN = $nsCheckoutConfig['sandbox']['token'];
+            $this->PAGSEGURO_EMAIL = $config['sandbox']['email'];
+            $this->PAGSEGURO_TOKEN = $config['sandbox']['token'];
         } else {
             $this->PAGSEGURO_API_URL = 'https://ws.pagseguro.uol.com.br/v2';
-            $this->PAGSEGURO_EMAIL = $nsCheckoutConfig['producao']['email'];
-            $this->PAGSEGURO_TOKEN = $nsCheckoutConfig['producao']['token'];
+            $this->PAGSEGURO_EMAIL = $config['producao']['email'];
+            $this->PAGSEGURO_TOKEN = $config['producao']['token'];
         }
     }
 

@@ -5,7 +5,8 @@
         "php": "^7.2",
         "ext-curl": "*",
         "lib-curl": "*",
-        "lib-openssl": "*"
+        "lib-openssl": "*",
+        "nextstage-brasil/ns-util": "^1.0"
     },
     "license": "Apache-2.0",
     "autoload": {
