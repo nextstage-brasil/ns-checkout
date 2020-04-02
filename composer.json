@@ -1,5 +1,5 @@
 {
-    "name": "nextstage-brasil/ns-checkou-library",
+    "name": "nextstage-brasil/ns-checkout-library",
     "description": "Checkout simplificado para os diversos gateway do mercado",
     "require": {
         "php": "^7.2"
