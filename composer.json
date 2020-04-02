@@ -1,10 +1,13 @@
 {
-    "name": "nextstage-brasil/ns-checkout",
+    "name": "nextstage-brasil/ns-checkou-library",
     "description": "Checkout simplificado para os diversos gateway do mercado",
     "require": {
-        "php": "^7.2"
+        "php": "^7.2",
+        "ext-curl": "*",
+        "lib-curl": "*",
+        "lib-openssl": "*"
     },
-    "license": "MIT",
+    "license": "Apache-2.0",
     "autoload": {
         "psr-4": {
             "nsCheckout\\": "src/"
