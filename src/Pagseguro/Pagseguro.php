@@ -7,18 +7,27 @@ class Pagseguro {
     private $SANDBOX_ENVIRONMENT;
     private $PAGSEGURO_API_URL, $PAGSEGURO_EMAIL, $PAGSEGURO_TOKEN, $library;
 
-    function __construct() {
-        $config = \NsUtil\Helper::nsIncludeConfigFile(__DIR__ . '/nsCheckoutConfig.php');
-        $this->SANDBOX_ENVIRONMENT = $config['useSandbox'];
-
-        if ($this->SANDBOX_ENVIRONMENT !== false) {
-            $this->PAGSEGURO_API_URL = 'https://ws.sandbox.pagseguro.uol.com.br/v2';
-            $this->PAGSEGURO_EMAIL = $config['sandbox']['email'];
-            $this->PAGSEGURO_TOKEN = $config['sandbox']['token'];
-        } else {
+    function __construct($email = false, $token = false, $sandbox = true) {
+        if ($email && $token) {
+            $this->SANDBOX_ENVIRONMENT = $sandbox;
             $this->PAGSEGURO_API_URL = 'https://ws.pagseguro.uol.com.br/v2';
-            $this->PAGSEGURO_EMAIL = $config['producao']['email'];
-            $this->PAGSEGURO_TOKEN = $config['producao']['token'];
+            if ($this->SANDBOX_ENVIRONMENT !== false) {
+                $this->PAGSEGURO_API_URL = 'https://ws.sandbox.pagseguro.uol.com.br/v2';
+            }
+            $this->PAGSEGURO_EMAIL = $email;
+            $this->PAGSEGURO_TOKEN = $token;
+        } else {
+            $config = \NsUtil\Helper::nsIncludeConfigFile(__DIR__ . '/nsCheckoutConfig.php');
+            $this->SANDBOX_ENVIRONMENT = $config['useSandbox'];
+            if ($this->SANDBOX_ENVIRONMENT !== false) {
+                $this->PAGSEGURO_API_URL = 'https://ws.sandbox.pagseguro.uol.com.br/v2';
+                $this->PAGSEGURO_EMAIL = $config['sandbox']['email'];
+                $this->PAGSEGURO_TOKEN = $config['sandbox']['token'];
+            } else {
+                $this->PAGSEGURO_API_URL = 'https://ws.pagseguro.uol.com.br/v2';
+                $this->PAGSEGURO_EMAIL = $config['producao']['email'];
+                $this->PAGSEGURO_TOKEN = $config['producao']['token'];
+            }
         }
     }
 
@@ -28,7 +37,6 @@ class Pagseguro {
         }
         return '<script type="text/javascript" src="https://stc.' . $sandbox . 'pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.directpayment.js"></script>';
     }
-    
 
     public function isSandBox() {
         return $this->SANDBOX_ENVIRONMENT;
@@ -37,9 +45,9 @@ class Pagseguro {
     public function trataError($error) {
         $out = [];
         foreach ($error as $err) {
-            if ((int) $err === 0) {
-                $out[] = $err; //json_decode($err)->message;
-            }
+            //if ((int) $err === 0) {
+            $out[] = $err->message; // json_encode(json_decode($err)->message);
+            //}
         }
         return $out;
     }
@@ -52,7 +60,7 @@ class Pagseguro {
      * @param array $header
      * @return type
      */
-    private function call($url, $params = [], $method = 'POST', array $header = ['Content-Type' => 'application/json; charset=UTF-8;']) {
+    private function call($url, $params = [], $method = 'POST', array $header = ['Content-Type' => 'application/x-www-form-urlencoded;charset=UTF-8']) {
         $params['email'] = $this->PAGSEGURO_EMAIL;
         $params['token'] = $this->PAGSEGURO_TOKEN;
 
@@ -111,6 +119,11 @@ class Pagseguro {
         $data = $CheckoutData;
         require __DIR__ . '/CheckoutDataExample.php';
         $dados = array_merge($CheckoutData, $data); // para garantir que todos os campos necessários virão aqui
+        // formatacao de valores padrao
+        $dados['senderCPF'] = preg_replace("/[^0-9]/", "", $dados['senderCPF']);
+        $dados['creditCardHolderCPF'] = preg_replace("/[^0-9]/", "", $dados['creditCardHolderCPF']);
+        $dados['installmentValue'] = number_format($dados['installmentValue'], '2');
+        $dados['itemAmount1'] = number_format($dados['itemAmount1'], '2');
         $dados['receiverEmail'] = $this->PAGSEGURO_EMAIL;
         $response = $this->call($this->PAGSEGURO_API_URL . "/transactions", $dados);
         return $response;

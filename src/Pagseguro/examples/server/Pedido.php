@@ -1,4 +1,10 @@
 <?php
+$file = 'autoload.php';
+$dir = '../';
+while (!file_exists($dir . $file)) {
+    $dir .= '../';
+}
+require_once $dir . $file;
 
 /**
  * Obviamente, esta classe não ira funcionar pois é apenas uma tentativa de agiliar a criação do tratamento do pedido..
