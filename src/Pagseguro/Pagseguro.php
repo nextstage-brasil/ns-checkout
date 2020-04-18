@@ -4,7 +4,7 @@ namespace nsCheckout\Pagseguro;
 
 class Pagseguro {
 
-    private $SANDBOX_ENVIRONMENT, $linkCheckoutTransparent;
+    private $SANDBOX_ENVIRONMENT, $errors;
     private $PAGSEGURO_API_URL, $PAGSEGURO_EMAIL, $PAGSEGURO_TOKEN, $library;
 
     function __construct($email = false, $token = false, $sandbox = true) {
@@ -50,6 +50,22 @@ class Pagseguro {
             //}
         }
         return $out;
+    }
+
+    public function translateError($error) {
+        if (!$this->errors) {
+            $this->errors = json_decode(file_get_contents(__DIR__ . '/lib/erros.json'), true);
+        }
+
+        if (is_array($error)) {
+            $out = [];
+            foreach ($error as $val) {
+                $out[] = $this->translateError($val);
+            }
+            return $out;
+        }
+
+        return $this->errors[mb_strtolower($error)];
     }
 
     /**
