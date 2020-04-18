@@ -4,7 +4,7 @@ namespace nsCheckout\Pagseguro;
 
 class Pagseguro {
 
-    private $SANDBOX_ENVIRONMENT;
+    private $SANDBOX_ENVIRONMENT, $linkCheckoutTransparent;
     private $PAGSEGURO_API_URL, $PAGSEGURO_EMAIL, $PAGSEGURO_TOKEN, $library;
 
     function __construct($email = false, $token = false, $sandbox = true) {
