@@ -4,7 +4,8 @@ namespace nsCheckout\Pagseguro;
 
 class Pagseguro {
 
-    private $SANDBOX_ENVIRONMENT, $errors;
+    private $SANDBOX_ENVIRONMENT;
+    private $translate_errors;
     private $PAGSEGURO_API_URL, $PAGSEGURO_EMAIL, $PAGSEGURO_TOKEN, $library;
 
     function __construct($email = false, $token = false, $sandbox = true) {
@@ -53,19 +54,22 @@ class Pagseguro {
     }
 
     public function translateError($error) {
-        if (!$this->errors) {
-            $this->errors = json_decode(file_get_contents(__DIR__ . '/lib/erros.json'), true);
+        if (!$this->translate_errors) {
+            $this->translate_errors = json_decode(file_get_contents(__DIR__ . '/lib/erros.json'), true);
         }
 
         if (is_array($error)) {
             $out = [];
-            foreach ($error as $val) {
-                $out[] = $this->translateError($val);
+            foreach ($error as $error) {
+                $out[] = $this->translateError($error);
             }
             return $out;
         }
+        $key = str_replace(['.', '%s'], '', $error);
+        $key = mb_strtolower(trim($key));
 
-        return $this->errors[mb_strtolower($error)];
+        return $this->translate_errors[$key];
+        return $this->translate_errors[$error];
     }
 
     /**
